@@ -17,7 +17,7 @@ def init():
     game = Game(screen, (WIDTH, HEIGHT))
 
     music = pygame.mixer.music.load("ambient.mp3")
-    pygame.mixer.music.play(-1)
+    #pygame.mixer.music.play(-1)
 
     homeFont = pygame.font.SysFont("monospace", 60)
 

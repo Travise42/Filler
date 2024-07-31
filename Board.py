@@ -14,8 +14,14 @@ class Board:
     def __init__(self, game):
         self.game = game
         self.board = self.create_board()
-        self.surface = pygame.Surface((Board.SQUARE_SIZE*COLUMNS, Board.SQUARE_SIZE*ROWS), pygame.SRCALPHA)
+        self.surface = pygame.Surface((Board.SQUARE_SIZE*COLUMNS, Board.SQUARE_SIZE*ROWS))
         self.tempSurface = pygame.Surface((Board.SQUARE_SIZE*COLUMNS, Board.SQUARE_SIZE*ROWS), pygame.SRCALPHA)
+        self.highlightSurface = pygame.Surface((Board.SQUARE_SIZE*COLUMNS, Board.SQUARE_SIZE*ROWS), pygame.SRCALPHA)
+        self.tempHighlightSurface = pygame.Surface((Board.SQUARE_SIZE*COLUMNS, Board.SQUARE_SIZE*ROWS), pygame.SRCALPHA)
+
+        self.highlightImage = pygame.Surface((Board.SQUARE_SIZE, Board.SQUARE_SIZE), pygame.SRCALPHA)
+        for i in range(10):
+            pygame.draw.rect(self.highlightImage, (255, 255, 255, 2*(10-i)**2), (0, i*0.2*Board.SQUARE_SIZE/10, Board.SQUARE_SIZE, 0.2*Board.SQUARE_SIZE/10+1))
 
     def create_board(self) -> list:
         new_board = []
@@ -49,7 +55,9 @@ class Board:
         if self.animation > 0:
             self.animation -= 1
             self.surface.blit(self.tempSurface, (0, 0))
+        
         self.game.surface.blit(self.surface, (self.game.WIDTH/2 - Board.SQUARE_SIZE*COLUMNS/2, self.game.HEIGHT/2 - Board.SQUARE_SIZE*ROWS/2))
+        #self.game.surface.blit(self.highlightImage, (0, 0))
 
     def getPlayer(self) -> int:
         return self.board[0][-1]
@@ -73,6 +81,24 @@ class Board:
             if row < ROWS - 1 and self.board[column][row + 1] == self.game.player:
                 squares.append((column, row + 1))
             if row > 0 and self.board[column][row - 1] == self.game.player:
+                squares.append((column, row - 1))
+    
+    def changeOpponentColor(self, new_color):
+        squares = [(COLUMNS - 1, 0)]
+
+        while len(squares) != 0:
+            column, row = squares[0]
+
+            self.board[column][row] = new_color
+            squares.pop(0)
+
+            if column < COLUMNS - 1 and self.board[column + 1][row] == self.game.opponent:
+                squares.append((column + 1, row))
+            if column > 0 and self.board[column - 1][row] == self.game.opponent:
+                squares.append((column - 1, row))
+            if row < ROWS - 1 and self.board[column][row + 1] == self.game.opponent:
+                squares.append((column, row + 1))
+            if row > 0 and self.board[column][row - 1] == self.game.opponent:
                 squares.append((column, row - 1))
 
 

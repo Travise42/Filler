@@ -43,7 +43,10 @@ class Board:
         self.animation += 1
 
     def refresh(self):
-        self.game.simulator.simulate(self.board, self.game.turn)
+        if self.turn:
+            self.game.simulator.simulate(self.board, self.game.turn)
+            self.game.simulator.collapse()
+            print(self.game.simulator.bestChoice)
 
         self.animation = 0
         for column in range(Board.COLUMNS):

@@ -7,10 +7,11 @@ import math
 from Board import Board
 
 class Simulation:
-    def __init__(self, board, turn, playerSquares, opponentSquares, remainingGenerations):
+    def __init__(self, board, new_color, turn, playerSquares, opponentSquares, remainingGenerations):
         self.board = board
         self.turn = turn
         self.remainingGenerations = remainingGenerations
+        self.color = new_color
         
         self.playerSquares = list(playerSquares)
         self.opponentSquares = list(opponentSquares)
@@ -23,7 +24,7 @@ class Simulation:
 
         # Not a valid color to pick
         if new_color == board[0][Board.ROWS - 1] or new_color == board[Board.COLUMNS - 1][0]:
-            return Simulation([], 0, [], [], self.remainingGenerations - 1)
+            return Simulation(board, new_color, 0, [], [], self.remainingGenerations - 1)
 
         squares = list([self.playerSquares, self.opponentSquares][self.turn])
 
@@ -45,9 +46,24 @@ class Simulation:
                 squares.append((column, row - 1))
 
         # Create a new simulation with this game state
-        return Simulation(board, 1 - self.turn,
+        return Simulation(board, new_color, 1 - self.turn,
                           [squares, self.playerSquares][self.turn],
                           [self.opponentSquares, squares][self.turn],
                           self.remainingGenerations - 1)
+    
+    def collapse(self):
+        if self.remainingGenerations == 0:
+            self.bestChoice = self.color
+            return
+
+        for simulation in self.simulations:
+            simulation.collapse()
+    
+        self.simulations = [max(self.simulations, key=(lambda sim: len([sim.playerSquares, sim.opponentSquares][self.turn])))]
+    
+        self.playerSquares = self.simulations[0].playerSquares
+        self.opponentSquares = self.simulations[0].opponentSquares
+
+        self.bestChoice = self.simulations[0].color
                 
 

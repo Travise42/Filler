@@ -4,17 +4,26 @@ from Simulation import Simulation
 
 class Simulator:
 
-    DEPTH = 1
+    DEPTH = 6
 
     def __init__(self):
-        pass
+        self.running = False
 
 
     def simulate(self, board, turn):
         self.playerSquares = self.get_squares(board, 0, Board.ROWS - 1)
         self.opponentSquares = self.get_squares(board, Board.COLUMNS - 1, 0)
 
-        self.simulation = Simulation(board, turn, self.playerSquares, self.opponentSquares, Simulator.DEPTH)
+        self.simulation = Simulation(board, -1, turn, self.playerSquares, self.opponentSquares, Simulator.DEPTH)
+        self.running = True
+
+    def collapse(self):
+        if not self.running:
+            return
+
+        self.simulation.collapse()
+
+        self.bestChoice = self.simulation.bestChoice
 
 
     def get_squares(self, board, initial_column, initial_row):

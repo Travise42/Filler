@@ -77,6 +77,8 @@ def init():
                 # Close the game
                 if event.type == pygame.QUIT:
                     running = False
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    game.panel.click(pygame.mouse.get_pos())
 
             game.update()
             

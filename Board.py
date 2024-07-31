@@ -15,8 +15,6 @@ class Board:
         self.board = self.create_board()
         self.surface = pygame.Surface((Board.SQUARE_SIZE*COLUMNS, Board.SQUARE_SIZE*ROWS))
 
-        self.refresh()
-
     def create_board(self) -> list:
         new_board = []
 
@@ -46,5 +44,30 @@ class Board:
 
     def draw(self, surf, width, height):
         surf.blit(self.surface, (width/2 - Board.SQUARE_SIZE*COLUMNS/2, height/2 - Board.SQUARE_SIZE*ROWS/2))
+
+    def getPlayer(self) -> int:
+        return self.board[0][-1]
+
+    def getOpponent(self) -> int:
+        return self.board[-1][0]
+    
+    def changePlayerColor(self, new_color):
+        squares = [(0, ROWS - 1)]
+
+        old_color = self.board[0][ROWS - 1]
+        while len(squares) != 0:
+            column, row = squares[0]
+
+            self.board[column][row] = new_color
+            squares.pop(0)
+
+            if column < COLUMNS - 1 and self.board[column + 1][row] == old_color:
+                squares.append((column + 1, row))
+            if column > 0 and self.board[column - 1][row] == old_color:
+                squares.append((column - 1, row))
+            if row < ROWS - 1 and self.board[column][row + 1] == old_color:
+                squares.append((column, row + 1))
+            if row > 0 and self.board[column][row - 1] == old_color:
+                squares.append((column, row - 1))
 
 

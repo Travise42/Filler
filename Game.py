@@ -14,7 +14,12 @@ class Game:
         self.tick = 0
 
         self.board = Board()
-        self.panel = Panel()
+        self.panel = Panel(self)
+
+        # 0: player, 1: opponent
+        self.turn = 0
+
+        self.refresh()
 
     def start(self):
         pass
@@ -22,9 +27,16 @@ class Game:
     def update(self):
         pass
 
+    def refresh(self):
+        self.player = self.board.getPlayer()
+        self.opponent = self.board.getOpponent()
+
+        self.board.refresh()
+        self.panel.refresh()
+
     def draw(self):
         self.board.draw(self.surface, self.WIDTH, self.HEIGHT)
-        self.panel.draw(self.surface, self.WIDTH, self.HEIGHT)
+        self.panel.draw(self.surface)
         self.tick += 1
 
 

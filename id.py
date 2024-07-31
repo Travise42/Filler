@@ -1,3 +1,4 @@
 HOME = 0
 SETTINGS = 1
 GAME = 2
+END = 3

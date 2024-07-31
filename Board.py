@@ -4,39 +4,38 @@ import math
 import random
 import id, color
 
-COLUMNS = 8
-ROWS = 7
-
 class Board:
 
     SQUARE_SIZE = 64
+    COLUMNS = 8
+    ROWS = 7
 
     def __init__(self, game):
         self.game = game
         self.board = self.create_board()
-        self.surface = pygame.Surface((Board.SQUARE_SIZE*COLUMNS, Board.SQUARE_SIZE*ROWS))
-        self.tempSurface = pygame.Surface((Board.SQUARE_SIZE*COLUMNS, Board.SQUARE_SIZE*ROWS), pygame.SRCALPHA)
-        self.highlightSurface = pygame.Surface((Board.SQUARE_SIZE*COLUMNS, Board.SQUARE_SIZE*ROWS), pygame.SRCALPHA)
-        self.tempHighlightSurface = pygame.Surface((Board.SQUARE_SIZE*COLUMNS, Board.SQUARE_SIZE*ROWS), pygame.SRCALPHA)
+        self.surface = pygame.Surface((Board.SQUARE_SIZE*Board.COLUMNS, Board.SQUARE_SIZE*Board.ROWS))
+        self.tempSurface = pygame.Surface((Board.SQUARE_SIZE*Board.COLUMNS, Board.SQUARE_SIZE*Board.ROWS), pygame.SRCALPHA)
+        self.highlightSurface = pygame.Surface((Board.SQUARE_SIZE*Board.COLUMNS, Board.SQUARE_SIZE*Board.ROWS), pygame.SRCALPHA)
+        self.tempHighlightSurface = pygame.Surface((Board.SQUARE_SIZE*Board.COLUMNS, Board.SQUARE_SIZE*Board.ROWS), pygame.SRCALPHA)
 
         self.highlightImage = pygame.Surface((Board.SQUARE_SIZE, Board.SQUARE_SIZE), pygame.SRCALPHA)
         for i in range(10):
             pygame.draw.rect(self.highlightImage, (255, 255, 255, 2*(10-i)**2), (0, i*0.2*Board.SQUARE_SIZE/10, Board.SQUARE_SIZE, 0.2*Board.SQUARE_SIZE/10+1))
 
-        self.playerSquares = [(0, ROWS - 1)]
-        self.opponentSquares = [(COLUMNS - 1, 0)]
+        self.playerSquares = [(0, Board.ROWS - 1)]
+        self.opponentSquares = [(Board.COLUMNS - 1, 0)]
 
     def create_board(self) -> list:
         new_board = []
 
-        for _c in range(COLUMNS):
+        for _c in range(Board.COLUMNS):
             old_square = -1
             new_column = []
-            for _r in range(ROWS):
+            for _r in range(Board.ROWS):
                 options = set(range(6))
                 options.discard(old_square)
                 if len(new_board) > 0: options.discard(new_board[-1][len(new_column)])
-                if len(new_board) + 1 == COLUMNS and len(new_column) == 0: options.discard(new_board[0][-1])
+                if len(new_board) + 1 == Board.COLUMNS and len(new_column) == 0: options.discard(new_board[0][-1])
                 new_square = random.choice(list(options))
                 new_column.append(new_square)
                 old_square = new_square
@@ -45,21 +44,35 @@ class Board:
         return new_board
 
     def update(self):
-        pass
+        self.animation += 1
 
     def refresh(self):
-        self.animation = 10
-        for column in range(COLUMNS):
-            for row in range(ROWS):
+        self.animation = 0
+        for column in range(Board.COLUMNS):
+            for row in range(Board.ROWS):
                 pygame.draw.rect(self.tempSurface, color.COLORS[self.board[column][row]] + (100,),
                                 (column*Board.SQUARE_SIZE, row*Board.SQUARE_SIZE, Board.SQUARE_SIZE, Board.SQUARE_SIZE))
 
     def draw(self):
-        if self.animation > 0:
-            self.animation -= 1
-            self.surface.blit(self.tempSurface, (0, 0))
+
+        if self.animation % 100 == 70:
+            for square in [self.playerSquares, self.opponentSquares][self.game.turn]:
+                column, row = square
+                if self.board[column][row] == [self.game.player, self.game.opponent][self.game.turn]:
+                        pygame.draw.rect(self.tempSurface, color.COLORS[[self.game.player, self.game.opponent][self.game.turn]] + (15,),
+                                        (column*Board.SQUARE_SIZE, row*Board.SQUARE_SIZE, Board.SQUARE_SIZE, Board.SQUARE_SIZE))
+        elif self.animation % 100 == 20:
+            if self.game.playerScore + self.game.opponentScore == Board.COLUMNS * Board.ROWS:
+                self.game.gameover = True
+            for square in [self.playerSquares, self.opponentSquares][self.game.turn]:
+                column, row = square
+                if self.board[column][row] == [self.game.player, self.game.opponent][self.game.turn]:
+                        pygame.draw.rect(self.tempSurface, (255, 255, 255, 5),
+                                        (column*Board.SQUARE_SIZE, row*Board.SQUARE_SIZE, Board.SQUARE_SIZE, Board.SQUARE_SIZE))
+
+        self.surface.blit(self.tempSurface, (0, 0))
         
-        self.game.surface.blit(self.surface, (self.game.WIDTH/2 - Board.SQUARE_SIZE*COLUMNS/2, self.game.HEIGHT/2 - Board.SQUARE_SIZE*ROWS/2))
+        self.game.surface.blit(self.surface, (self.game.WIDTH/2 - Board.SQUARE_SIZE*Board.COLUMNS/2, self.game.HEIGHT/2 - Board.SQUARE_SIZE*Board.ROWS/2))
         #self.game.surface.blit(self.highlightImage, (0, 0))
 
     def getPlayer(self) -> int:
@@ -77,11 +90,11 @@ class Board:
 
             self.board[column][row] = new_color
 
-            if column < COLUMNS - 1 and check(column + 1, row):
+            if column < Board.COLUMNS - 1 and check(column + 1, row):
                 squares.append((column + 1, row))
             if column > 0 and check(column - 1, row):
                 squares.append((column - 1, row))
-            if row < ROWS - 1 and check(column, row + 1):
+            if row < Board.ROWS - 1 and check(column, row + 1):
                 squares.append((column, row + 1))
             if row > 0 and check(column, row - 1):
                 squares.append((column, row - 1))

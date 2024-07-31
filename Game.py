@@ -12,6 +12,7 @@ class Game:
         self.HEIGHT = size[1]
         self.surface = surface
         self.tick = 0
+        self.gameover = False
 
         self.board = Board(self)
         self.panel = Panel(self)
@@ -25,7 +26,7 @@ class Game:
         pass
 
     def update(self):
-        pass
+        self.board.update()
 
     def refresh(self):
         self.player = self.board.getPlayer()

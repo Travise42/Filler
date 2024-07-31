@@ -84,6 +84,9 @@ def init():
 
             game.update()
             
+            if game.gameover:
+                scene = id.END
+            
             ## Drawing ##
             
             screen.fill(color.FOREGROUND)
@@ -100,6 +103,19 @@ def init():
             text = str(game.opponentScore)
             screen.blit(gameFont.render(text, True, color.COLORS[game.opponent]),
                         (WIDTH - 1.5*Board.SQUARE_SIZE - gameFont.size(text)[0]/2, 1.5*Board.SQUARE_SIZE - gameFont.size(text)[1]/2, Board.SQUARE_SIZE, Board.SQUARE_SIZE))
+        
+        elif scene == id.END:
+            # Handle events
+            for event in pygame.event.get():
+                # Close the game
+                if event.type == pygame.QUIT:
+                    running = False
+        
+            pygame.draw.rect(screen, (70, 70, 70), (WIDTH/2 - 120, HEIGHT/2 - 40, 240, 80))
+            pygame.draw.rect(screen, (240, 70, 70), (WIDTH/2 - 120, HEIGHT/2 - 40, 240, 80), 5)
+            text = ["YOU WIN!", "YOU LOSE!"][game.playerScore < game.opponentScore]
+            screen.blit(gameFont.render(text, True, color.GAMEOVER[game.playerScore < game.opponentScore]),
+                        (WIDTH/2 - gameFont.size(text)[0]/2, HEIGHT/2 - gameFont.size(text)[1]/2, *gameFont.size(text)))
         
         # Refresh the screen
         clock.tick(30)

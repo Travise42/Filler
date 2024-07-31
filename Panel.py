@@ -23,11 +23,10 @@ class Panel:
                 rect = ((i+0.3)*Board.SQUARE_SIZE, 0.3*Board.SQUARE_SIZE, 0.4*Board.SQUARE_SIZE, 0.4*Board.SQUARE_SIZE)
             else:
                 rect = (i*Board.SQUARE_SIZE, 0, Board.SQUARE_SIZE, Board.SQUARE_SIZE)
-            pygame.draw.rect(self.surface, color.COLORS[i],
-                             rect)
+            pygame.draw.rect(self.surface, color.COLORS[i], rect)
 
-    def draw(self, surf):
-        surf.blit(self.surface, (self.windowX, self.windowY))
+    def draw(self):
+        self.game.surface.blit(self.surface, (self.windowX, self.windowY))
 
     def click(self, pos):
         mouseX = (pos[0] - self.windowX) / Board.SQUARE_SIZE

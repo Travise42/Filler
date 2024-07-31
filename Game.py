@@ -13,7 +13,7 @@ class Game:
         self.surface = surface
         self.tick = 0
 
-        self.board = Board()
+        self.board = Board(self)
         self.panel = Panel(self)
 
         # 0: player, 1: opponent
@@ -35,8 +35,8 @@ class Game:
         self.panel.refresh()
 
     def draw(self):
-        self.board.draw(self.surface, self.WIDTH, self.HEIGHT)
-        self.panel.draw(self.surface)
+        self.board.draw()
+        self.panel.draw()
         self.tick += 1
 
 

@@ -29,13 +29,17 @@ class Panel:
         self.game.surface.blit(self.surface, (self.windowX, self.windowY))
 
     def click(self, pos):
-        mouseX = (pos[0] - self.windowX) / Board.SQUARE_SIZE
+        mouseX = int((pos[0] - self.windowX) / Board.SQUARE_SIZE)
         mouseY = pos[1] - self.windowY
 
-        if mouseX < 0 or mouseX >= 6 or mouseY < 0 or mouseY >= Board.SQUARE_SIZE:
+        if mouseX < 0 or mouseX >= 6:
+            return
+        if mouseY < 0 or mouseY >= Board.SQUARE_SIZE:
+            return
+        if mouseX == self.game.player or mouseX == self.game.opponent:
             return
         
-        self.game.board.changePlayerColor(math.floor(mouseX))
+        self.game.board.changePlayerColor(mouseX)
         
         self.game.refresh()
         

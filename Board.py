@@ -18,10 +18,6 @@ class Board:
         self.highlightSurface = pygame.Surface((Board.SQUARE_SIZE*Board.COLUMNS, Board.SQUARE_SIZE*Board.ROWS), pygame.SRCALPHA)
         self.tempHighlightSurface = pygame.Surface((Board.SQUARE_SIZE*Board.COLUMNS, Board.SQUARE_SIZE*Board.ROWS), pygame.SRCALPHA)
 
-        self.highlightImage = pygame.Surface((Board.SQUARE_SIZE, Board.SQUARE_SIZE), pygame.SRCALPHA)
-        for i in range(10):
-            pygame.draw.rect(self.highlightImage, (255, 255, 255, 2*(10-i)**2), (0, i*0.2*Board.SQUARE_SIZE/10, Board.SQUARE_SIZE, 0.2*Board.SQUARE_SIZE/10+1))
-
         self.playerSquares = [(0, Board.ROWS - 1)]
         self.opponentSquares = [(Board.COLUMNS - 1, 0)]
 
@@ -47,6 +43,8 @@ class Board:
         self.animation += 1
 
     def refresh(self):
+        self.game.simulator.simulate(self.board, self.game.turn)
+
         self.animation = 0
         for column in range(Board.COLUMNS):
             for row in range(Board.ROWS):

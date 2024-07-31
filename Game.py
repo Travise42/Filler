@@ -5,6 +5,7 @@ import random
 import color, id
 from Board import Board
 from Panel import Panel
+from Simulator import Simulator
 
 class Game:
     def __init__(self, surface, size):
@@ -19,6 +20,8 @@ class Game:
 
         # 0: player, 1: opponent
         self.turn = 0
+
+        self.simulator = Simulator()
 
         self.refresh()
 

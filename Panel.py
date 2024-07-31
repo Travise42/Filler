@@ -39,10 +39,7 @@ class Panel:
         if mouseX == self.game.player or mouseX == self.game.opponent:
             return
         
-        if self.game.turn == 0:
-            self.game.board.changePlayerColor(mouseX)
-        else:
-            self.game.board.changeOpponentColor(mouseX)
+        self.game.board.changeColor(mouseX, [self.game.board.playerSquares, self.game.board.opponentSquares][self.game.turn])
 
         self.game.turn = 1 - self.game.turn
         

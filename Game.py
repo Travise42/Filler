@@ -30,6 +30,8 @@ class Game:
     def refresh(self):
         self.player = self.board.getPlayer()
         self.opponent = self.board.getOpponent()
+        self.playerScore = len(self.board.playerSquares)
+        self.opponentScore = len(self.board.opponentSquares)
 
         self.board.refresh()
         self.panel.refresh()

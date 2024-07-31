@@ -3,6 +3,7 @@ import pygame
 import random as rand
 import id, color
 from Game import Game
+from Board import Board
 
 WIDTH = 1000
 HEIGHT = 800
@@ -20,6 +21,7 @@ def init():
     #pygame.mixer.music.play(-1)
 
     homeFont = pygame.font.SysFont("monospace", 60)
+    gameFont = pygame.font.SysFont("monospace", 40)
 
     scene = id.GAME
     game.start()
@@ -86,6 +88,18 @@ def init():
             
             screen.fill(color.FOREGROUND)
             game.draw()
+
+            pygame.draw.rect(screen, color.COLORS[game.player],
+                             (Board.SQUARE_SIZE, Board.SQUARE_SIZE, Board.SQUARE_SIZE, Board.SQUARE_SIZE), 2)
+            text = str(game.playerScore)
+            screen.blit(gameFont.render(text, True, color.COLORS[game.player]),
+                        (1.5*Board.SQUARE_SIZE - gameFont.size(text)[0]/2, 1.5*Board.SQUARE_SIZE - gameFont.size(text)[1]/2, Board.SQUARE_SIZE, Board.SQUARE_SIZE))
+
+            pygame.draw.rect(screen, color.COLORS[game.opponent],
+                             (WIDTH - 2*Board.SQUARE_SIZE, Board.SQUARE_SIZE, Board.SQUARE_SIZE, Board.SQUARE_SIZE), 1)
+            text = str(game.opponentScore)
+            screen.blit(gameFont.render(text, True, color.COLORS[game.opponent]),
+                        (WIDTH - 1.5*Board.SQUARE_SIZE - gameFont.size(text)[0]/2, 1.5*Board.SQUARE_SIZE - gameFont.size(text)[1]/2, Board.SQUARE_SIZE, Board.SQUARE_SIZE))
         
         # Refresh the screen
         clock.tick(30)

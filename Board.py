@@ -43,7 +43,7 @@ class Board:
         self.animation += 1
 
     def refresh(self):
-        if self.turn:
+        if self.game.turn:
             self.game.simulator.simulate(self.board, self.game.turn)
             self.game.simulator.collapse()
             print(self.game.simulator.bestChoice)
@@ -55,7 +55,6 @@ class Board:
                                 (column*Board.SQUARE_SIZE, row*Board.SQUARE_SIZE, Board.SQUARE_SIZE, Board.SQUARE_SIZE))
 
     def draw(self):
-
         if self.animation % 100 == 70:
             for square in [self.playerSquares, self.opponentSquares][self.game.turn]:
                 column, row = square

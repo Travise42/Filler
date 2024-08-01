@@ -1,7 +1,8 @@
 HOME = 0
-SETTINGS = 1
-GAME = 2
-END = 3
+MODE = 1
+SETTINGS = 2
+GAME = 3
+END = 4
 
 BLACK = 0
 RED = 1

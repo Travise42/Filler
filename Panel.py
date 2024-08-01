@@ -26,9 +26,17 @@ class Panel:
             pygame.draw.rect(self.surface, color.COLORS[i], rect)
 
     def draw(self):
+        if self.game.mode:
+            if self.game.turn:
+                return
+        
         self.game.surface.blit(self.surface, (self.windowX, self.windowY))
 
     def click(self, pos):
+        if self.game.mode:
+            if self.game.turn:
+                return
+        
         mouseX = int((pos[0] - self.windowX) / Board.SQUARE_SIZE)
         mouseY = pos[1] - self.windowY
 
@@ -39,9 +47,5 @@ class Panel:
         if mouseX == self.game.player or mouseX == self.game.opponent:
             return
         
-        self.game.board.changeColor(mouseX, [self.game.board.playerSquares, self.game.board.opponentSquares][self.game.turn])
-
-        self.game.turn = 1 - self.game.turn
-        
-        self.game.refresh()
+        self.game.board.makeMove(mouseX)
         

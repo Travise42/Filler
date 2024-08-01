@@ -42,11 +42,16 @@ class Board:
     def update(self):
         self.animation += 1
 
+        if self.game.mode and self.game.turn:
+            self.game.timer *= 0.95
+
+            if not self.game.simulator.running and self.game.timer < 1:
+                self.makeMove(self.game.simulator.bestChoice)
+
     def refresh(self):
-        if self.game.turn:
-            self.game.simulator.simulate(self.board, self.game.turn)
+        if self.game.mode and self.game.turn:
+            self.game.simulator.simulate(self.board, self.game.turn, self.game.mode**2)
             self.game.simulator.collapse()
-            print(self.game.simulator.bestChoice)
 
         self.animation = 0
         for column in range(Board.COLUMNS):
@@ -81,6 +86,15 @@ class Board:
     def getOpponent(self) -> int:
         return self.board[-1][0]
     
+    def makeMove(self, new_color):
+        self.game.board.changeColor(new_color, [self.game.board.playerSquares, self.game.board.opponentSquares][self.game.turn])
+
+        self.game.turn = 1 - self.game.turn
+        if self.game.mode == id.PERSON:
+            self.game.timer = 0
+        
+        self.game.refresh()
+    
     def changeColor(self, new_color, squares):
         def check(column, row):
             return self.board[column][row] == new_color and (column, row) not in squares
@@ -98,5 +112,6 @@ class Board:
                 squares.append((column, row + 1))
             if row > 0 and check(column, row - 1):
                 squares.append((column, row - 1))
+
 
 

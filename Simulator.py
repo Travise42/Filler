@@ -4,17 +4,15 @@ from Simulation import Simulation
 
 class Simulator:
 
-    DEPTH = 6
-
     def __init__(self):
         self.running = False
 
 
-    def simulate(self, board, turn):
+    def simulate(self, board, turn, depth):
         self.playerSquares = self.get_squares(board, 0, Board.ROWS - 1)
         self.opponentSquares = self.get_squares(board, Board.COLUMNS - 1, 0)
 
-        self.simulation = Simulation(board, -1, turn, self.playerSquares, self.opponentSquares, Simulator.DEPTH)
+        self.simulation = Simulation(board, -1, turn, self.playerSquares, self.opponentSquares, depth)
         self.running = True
 
     def collapse(self):
@@ -22,8 +20,9 @@ class Simulator:
             return
 
         self.simulation.collapse()
-
         self.bestChoice = self.simulation.bestChoice
+
+        self.running = False
 
 
     def get_squares(self, board, initial_column, initial_row):

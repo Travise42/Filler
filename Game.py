@@ -8,18 +8,20 @@ from Panel import Panel
 from Simulator import Simulator
 
 class Game:
-    def __init__(self, surface, size):
-        self.WIDTH = size[0]
-        self.HEIGHT = size[1]
+    def __init__(self, surface, mode):
+        self.WIDTH = surface.get_width()
+        self.HEIGHT = surface.get_height()
         self.surface = surface
         self.tick = 0
         self.gameover = False
+        self.mode = mode #!!!!
 
         self.board = Board(self)
         self.panel = Panel(self)
 
         # 0: player, 1: opponent
         self.turn = 0
+        self.timer = 0
 
         self.simulator = Simulator()
 
@@ -30,6 +32,9 @@ class Game:
 
     def update(self):
         self.board.update()
+
+        if self.mode == id.PERSON or not self.turn:
+            self.timer += 1
 
     def refresh(self):
         self.player = self.board.getPlayer()

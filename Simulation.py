@@ -59,11 +59,21 @@ class Simulation:
         for simulation in self.simulations:
             simulation.collapse()
     
-        self.simulations = [max(self.simulations, key=(lambda sim: len([sim.playerSquares, sim.opponentSquares][self.turn])))]
+        self.simulations = [max(self.simulations, key=self.value)]
     
         self.playerSquares = self.simulations[0].playerSquares
         self.opponentSquares = self.simulations[0].opponentSquares
 
         self.bestChoice = self.simulations[0].color
+
+    def value(self, simulation):
+        primary, secondary = len(simulation.playerSquares), len(simulation.opponentSquares)
+        if self.turn:
+            primary, secondary = secondary, primary
+        
+        return 5*primary - secondary
+
+
+
                 
 

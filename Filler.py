@@ -24,12 +24,20 @@ def init():
     settings = Button("Settings")
     quit = Button("Quit")
     home.add_buttons(play, settings, quit)
+    modeMenu = Menu(screen)
+    person = Button("Person")
+    computer = Button("Computer")
+    modeMenu.add_buttons(person, computer)
+    levelMenu = Menu(screen)
+    easy = Button("Super Easy")
+    medium = Button("Very Easy")
+    hard = Button("Easy")
+    levelMenu.add_buttons(easy, medium, hard)
 
     music = pygame.mixer.music.load("ambient.mp3")
     #pygame.mixer.music.play(-1)
 
     scene = id.HOME
-    #game.start()
 
     running = True
     mouseDown = False
@@ -50,20 +58,57 @@ def init():
             for event in events:
                 if event.type == pygame.MOUSEBUTTONUP:
                     if play.state:
-                        scene = id.GAME
-                        game = Game(screen, (WIDTH, HEIGHT))
+                        scene = id.MODE
                     elif settings.state:
                         scene = id.SETTINGS
                     elif quit.state:
                         running = False
             
-            home.update(pygame.mouse.get_pos(), mouseDown)
+            home.update(mouseDown)
             
             ## Drawing ##
             
             screen.fill(color.FOREGROUND)
             
             home.draw()
+
+        elif scene == id.MODE:
+            for event in events:
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if person.state:
+                        scene = id.LEVEL
+                        game = Game(screen, id.PERSON)
+                    elif computer.state:
+                        scene = id.LEVEL
+
+            modeMenu.update(mouseDown)
+            
+            ## Drawing ##
+            
+            screen.fill(color.FOREGROUND)
+            
+            modeMenu.draw()
+
+        elif scene == id.LEVEL:
+            for event in events:
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if easy.state:
+                        scene = id.GAME
+                        game = Game(screen, id.EASY)
+                    elif medium.state:
+                        scene = id.GAME
+                        game = Game(screen, id.MEDIUM)
+                    elif hard.state:
+                        scene = id.GAME
+                        game = Game(screen, id.HARD)
+
+            levelMenu.update(mouseDown)
+            
+            ## Drawing ##
+            
+            screen.fill(color.FOREGROUND)
+            
+            levelMenu.draw()
         
         elif scene == id.SETTINGS:
             for event in events:

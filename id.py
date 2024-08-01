@@ -1,8 +1,9 @@
 HOME = 0
 MODE = 1
-SETTINGS = 2
-GAME = 3
-END = 4
+LEVEL = 2
+SETTINGS = 3
+GAME = 4
+END = 5
 
 BLACK = 0
 RED = 1
@@ -10,3 +11,8 @@ YELLOW = 2
 GREEN = 3
 BLUE = 4
 PURPLE = 5
+
+PERSON = 0
+EASY = 1
+MEDIUM = 2
+HARD = 3

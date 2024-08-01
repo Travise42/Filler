@@ -24,9 +24,9 @@ class Menu:
         for button in buttons:
             self.add_button(button)
 
-    def update(self, mouse_pos, mouse_is_down):
+    def update(self, mouse_is_down):
         for i, button in enumerate(self.buttons):
-            button.update(mouse_pos, self.surface, i, len(self.buttons), mouse_is_down)
+            button.update(pygame.mouse.get_pos(), self.surface, i, len(self.buttons), mouse_is_down)
 
     def draw(self):
         for i, button in enumerate(self.buttons):

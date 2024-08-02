@@ -9,15 +9,12 @@ class Simulator:
 
 
     def simulate(self, board, turn, depth):
-        self.playerSquares = self.get_squares(board, 0, Board.ROWS - 1)
-        self.opponentSquares = self.get_squares(board, Board.COLUMNS - 1, 0)
-
-        self.simulation = Simulation(board, -1, turn, self.playerSquares, self.opponentSquares, depth)
         self.running = True
 
-    def collapse(self):
-        if not self.running:
-            return
+        playerSquares = self.get_squares(board, 0, Board.ROWS - 1)
+        opponentSquares = self.get_squares(board, Board.COLUMNS - 1, 0)
+
+        self.simulation = Simulation(board, -1, turn, playerSquares, opponentSquares, depth)
 
         self.simulation.collapse()
         self.bestChoice = self.simulation.bestChoice

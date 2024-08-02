@@ -3,6 +3,7 @@ import pygame
 import math
 import random
 import id, color
+import threading
 
 class Board:
 
@@ -50,8 +51,7 @@ class Board:
 
     def refresh(self):
         if self.game.mode and self.game.turn:
-            self.game.simulator.simulate(self.board, self.game.turn, self.game.mode**2)
-            self.game.simulator.collapse()
+            threading.Thread(target=self.game.simulator.simulate, args=(self.board, self.game.turn, self.game.mode)).start()
 
         self.animation = 0
         for column in range(Board.COLUMNS):
@@ -112,6 +112,8 @@ class Board:
                 squares.append((column, row + 1))
             if row > 0 and check(column, row - 1):
                 squares.append((column, row - 1))
+
+    
 
 
 

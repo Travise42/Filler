@@ -76,7 +76,7 @@ def init():
             for event in events:
                 if event.type == pygame.MOUSEBUTTONUP:
                     if person.state:
-                        scene = id.LEVEL
+                        scene = id.GAME
                         game = Game(screen, id.PERSON)
                     elif computer.state:
                         scene = id.LEVEL

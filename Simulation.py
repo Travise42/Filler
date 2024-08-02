@@ -3,7 +3,7 @@
 # Then creates 6 Simulations off of that first Simualtions
 # These new Simulations can be put into more Simulations using the Simulator Class
 
-import math
+import math, time, random
 from Board import Board
 
 class Simulation:
@@ -18,6 +18,9 @@ class Simulation:
 
         if remainingGenerations > 0:
             self.simulations = [self.simulate(new_color) for new_color in range(6)]
+
+        if random.randint(0, 10) == 0:
+            time.sleep(0.00001)
 
     def simulate(self, new_color):
         board = [list(row) for row in self.board]

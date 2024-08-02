@@ -14,7 +14,7 @@ class Game:
         self.surface = surface
         self.tick = 0
         self.gameover = False
-        self.mode = mode #!!!!
+        self.mode = mode
 
         self.board = Board(self)
         self.panel = Panel(self)

@@ -20,7 +20,7 @@ class Game:
         self.panel = Panel(self)
 
         # 0: player, 1: opponent
-        self.turn = 0
+        self.turn = 1
         self.timer = 0
 
         self.simulator = Simulator()

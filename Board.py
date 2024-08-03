@@ -51,7 +51,7 @@ class Board:
 
     def refresh(self):
         if self.game.mode and self.game.turn:
-            threading.Thread(target=self.game.simulator.simulate, args=(self.board, self.game.turn, self.game.mode)).start()
+            threading.Thread(target=self.game.simulator.simulate, args=(self.board, self.game.turn, self.game.mode**2)).start()
 
         self.animation = 0
         for column in range(Board.COLUMNS):

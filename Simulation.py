@@ -19,15 +19,12 @@ class Simulation:
         if remainingGenerations > 0:
             self.simulations = [self.simulate(new_color) for new_color in range(6)]
 
-        if random.randint(0, 10) == 0:
-            time.sleep(0.00001)
-
     def simulate(self, new_color):
         board = [list(row) for row in self.board]
 
         # Not a valid color to pick
         if new_color == board[0][Board.ROWS - 1] or new_color == board[Board.COLUMNS - 1][0]:
-            return Simulation(board, new_color, 0, [], [], self.remainingGenerations - 1)
+            return Simulation([], new_color, 0, [], [], 0)
 
         squares = list([self.playerSquares, self.opponentSquares][self.turn])
 
@@ -48,11 +45,15 @@ class Simulation:
             if row > 0 and check(column, row - 1):
                 squares.append((column, row - 1))
 
+        if len([self.playerSquares, self.opponentSquares][self.turn]) == len(squares):
+            return Simulation([], new_color, 0, self.playerSquares, self.opponentSquares, 0)
+
         # Create a new simulation with this game state
+        gameOver = len([self.playerSquares, self.opponentSquares][not self.turn]) + len(squares) == Board.COLUMNS * Board.ROWS
         return Simulation(board, new_color, 1 - self.turn,
                           [squares, self.playerSquares][self.turn],
                           [self.opponentSquares, squares][self.turn],
-                          self.remainingGenerations - 1)
+                          0 if gameOver else self.remainingGenerations - 1)
     
     def collapse(self):
         if self.remainingGenerations == 0:

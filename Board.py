@@ -11,9 +11,9 @@ class Board:
     COLUMNS = 8
     ROWS = 7
 
-    def __init__(self, game):
+    def __init__(self, game, board=None):
         self.game = game
-        self.board = self.create_board()
+        self.board = self.create_board() if board == None else board
         self.surface = pygame.Surface((Board.SQUARE_SIZE*Board.COLUMNS, Board.SQUARE_SIZE*Board.ROWS))
         self.tempSurface = pygame.Surface((Board.SQUARE_SIZE*Board.COLUMNS, Board.SQUARE_SIZE*Board.ROWS), pygame.SRCALPHA)
         self.highlightSurface = pygame.Surface((Board.SQUARE_SIZE*Board.COLUMNS, Board.SQUARE_SIZE*Board.ROWS), pygame.SRCALPHA)
@@ -58,6 +58,41 @@ class Board:
             for row in range(Board.ROWS):
                 pygame.draw.rect(self.tempSurface, color.COLORS[self.board[column][row]] + (100,),
                                 (column*Board.SQUARE_SIZE, row*Board.SQUARE_SIZE, Board.SQUARE_SIZE, Board.SQUARE_SIZE))
+                
+    def refreshSquares(self):
+        self.playerSquares = Board.get_squares(self.board, 0, self.ROWS - 1)
+        self.opponentSquares = Board.get_squares(self.board, self.COLUMNS - 1, 0)
+
+    
+    def get_squares(board, initial_column, initial_row):
+        squares = [(initial_column, initial_row)]
+        square_color = board[initial_column][initial_row]
+        for column in range(Board.COLUMNS):
+            for row in range(Board.ROWS):
+                if (column, row) in squares or board[column][row] != square_color:
+                    continue
+
+                t = 0
+                if column < Board.COLUMNS - 1 and square_color == board[column + 1][row]:
+                    t = 1
+                    if (column + 1, row) not in squares:
+                        squares.append((column + 1, row))
+                if column > 0 and square_color == board[column - 1][row]:
+                    t = 1
+                    if (column - 1, row) not in squares:
+                        squares.append((column - 1, row))
+                if row < Board.ROWS - 1 and square_color == board[column][row + 1]:
+                    t = 1
+                    if (column, row + 1) not in squares:
+                        squares.append((column, row + 1))
+                if row > 0 and square_color == board[column][row - 1]:
+                    t = 1
+                    if (column, row - 1) not in squares:
+                        squares.append((column, row - 1))
+                if t == 1:
+                    squares.append((column, row))
+        
+        return squares
 
     def draw(self):
         if self.animation % 100 == 70:

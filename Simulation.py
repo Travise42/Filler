@@ -45,8 +45,8 @@ class Simulation:
             if row > 0 and check(column, row - 1):
                 squares.append((column, row - 1))
 
-        if len([self.playerSquares, self.opponentSquares][self.turn]) == len(squares):
-            return Simulation([], new_color, 0, self.playerSquares, self.opponentSquares, 0)
+        #if len([self.playerSquares, self.opponentSquares][self.turn]) == len(squares):
+        #    return Simulation([], new_color, 0, [], [], 0)
 
         # Create a new simulation with this game state
         gameOver = len([self.playerSquares, self.opponentSquares][not self.turn]) + len(squares) == Board.COLUMNS * Board.ROWS

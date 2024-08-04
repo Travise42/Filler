@@ -4,6 +4,7 @@ import random as rand
 import id, color
 from Game import Game
 from Board import Board
+from Engine import Engine
 from Menu import Menu, Button
 
 WIDTH = 1000
@@ -20,24 +21,32 @@ def init():
     gameFont = pygame.font.SysFont("monospace", 40)
 
     home = Menu(screen)
-    play = Button("Play")
-    settings = Button("Settings")
-    quit = Button("Quit")
+    play = Button("Play", color.COLORS[id.BLUE])
+    settings = Button("Engine", color.COLORS[id.GREEN])
+    quit = Button("Quit", color.COLORS[id.RED])
     home.add_buttons(play, settings, quit)
     modeMenu = Menu(screen)
-    person = Button("Person")
-    computer = Button("Computer")
-    modeMenu.add_buttons(person, computer)
+    person = Button("Person", color.COLORS[id.YELLOW])
+    computer = Button("Computer", color.COLORS[id.PURPLE])
+    backHome = Button("Back", color.COLORS[id.BLACK])
+    modeMenu.add_buttons(person, computer, backHome)
     levelMenu = Menu(screen)
-    easy = Button("Super Easy")
-    medium = Button("Very Easy")
-    hard = Button("Easy")
-    levelMenu.add_buttons(easy, medium, hard)
+    easy = Button("Super Easy", color.COLORS[id.GREEN])
+    medium = Button("Very Easy", color.COLORS[id.YELLOW])
+    hard = Button("Easy", color.COLORS[id.RED])
+    backMenu = Button("Back", color.COLORS[id.BLACK])
+    levelMenu.add_buttons(easy, medium, hard, backMenu)
+    engineMenu = Menu(screen, (WIDTH - 125, HEIGHT - 200))
+    done = Button("Done", color.COLORS[id.GREEN], 40)
+    cancel = Button("Back", color.COLORS[id.RED], 40)
+    engineMenu.add_buttons(done, cancel)
 
     music = pygame.mixer.music.load("ambient.mp3")
     #pygame.mixer.music.play(-1)
 
     scene = id.HOME
+
+    menuBoard = generateBoard()
 
     running = True
     mouseDown = False
@@ -59,8 +68,10 @@ def init():
                 if event.type == pygame.MOUSEBUTTONUP:
                     if play.state:
                         scene = id.MODE
+                        menuBoard = generateBoard()
                     elif settings.state:
-                        scene = id.SETTINGS
+                        scene = id.ENGINE
+                        engine = Engine(screen)
                     elif quit.state:
                         running = False
             
@@ -70,6 +81,8 @@ def init():
             
             screen.fill(color.FOREGROUND)
             
+            screen.blit(menuBoard, (0, 0))
+
             home.draw()
 
         elif scene == id.MODE:
@@ -80,12 +93,18 @@ def init():
                         game = Game(screen, id.PERSON)
                     elif computer.state:
                         scene = id.LEVEL
+                        menuBoard = generateBoard()
+                    elif backHome.state:
+                        scene = id.HOME
+                        menuBoard = generateBoard()
 
             modeMenu.update(mouseDown)
             
             ## Drawing ##
             
             screen.fill(color.FOREGROUND)
+            
+            screen.blit(menuBoard, (0, 0))
             
             modeMenu.draw()
 
@@ -101,6 +120,9 @@ def init():
                     elif hard.state:
                         scene = id.GAME
                         game = Game(screen, id.HARD)
+                    elif backMenu.state:
+                        scene = id.MODE
+                        menuBoard = generateBoard()
 
             levelMenu.update(mouseDown)
             
@@ -108,19 +130,33 @@ def init():
             
             screen.fill(color.FOREGROUND)
             
+            screen.blit(menuBoard, (0, 0))
+            
             levelMenu.draw()
         
-        elif scene == id.SETTINGS:
+        elif scene == id.ENGINE:
             for event in events:
-                pass
+                if event.type == pygame.MOUSEBUTTONUP:
+                    engine.click()
+
+                    if done.state:
+                        scene = id.GAME
+                        game = Game(screen, id.PERSON, engine.board)
+                    elif cancel.state:
+                        scene = id.HOME
+
+            engineMenu.update(mouseDown)
                     
             screen.fill(color.FOREGROUND)
+            engine.draw()
+
+            engineMenu.draw()
                     
         elif scene == id.GAME:
             # Handle events
             for event in events:
                 if event.type == pygame.MOUSEBUTTONUP:
-                    game.panel.click(pygame.mouse.get_pos())
+                    game.panel.click()
 
             game.update()
             
@@ -159,6 +195,23 @@ def init():
         # Refresh the screen
         clock.tick(30)
         pygame.display.update()
+
+def generateBoard() -> pygame.Surface:
+    board_surface = pygame.Surface((8, 7), pygame.SRCALPHA)
+    board = Board.create_board(None)
+
+    rands = [(0, 3), (1, 3), (2, 4), (4, 4), (4, 4), (4, 4), (4, 4)]
+    for row in range(7):
+        for side in range(2):
+            for square in range(0, rand.randint(*rands[row])):
+                column = 7-square if side else square
+                board_color = color.COLORS[board[column][row]]
+                board_surface.set_at((column, row), board_color)
+
+    surface = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+    surface.blit(pygame.transform.rotate(pygame.transform.scale(board_surface, (WIDTH, HEIGHT)), -30), (-300, 200))
+
+    return surface
 
 
 if __name__ == "__main__":

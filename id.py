@@ -1,9 +1,9 @@
 HOME = 0
 MODE = 1
 LEVEL = 2
-SETTINGS = 3
-GAME = 4
-END = 5
+GAME = 3
+END = 4
+ENGINE = 5
 
 BLACK = 0
 RED = 1

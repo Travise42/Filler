@@ -41,7 +41,7 @@ def init():
     cancel = Button("Back", color.COLORS[id.RED], 40)
     engineMenu.add_buttons(done, cancel)
 
-    music = pygame.mixer.music.load("ambient.mp3")
+    #music = pygame.mixer.music.load("ambient.mp3")
     #pygame.mixer.music.play(-1)
 
     scene = id.HOME
